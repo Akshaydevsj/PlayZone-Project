@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <h3 class="heading mb-4">My Turfs</h3>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-info">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% for turf in turfs %}
+      <div class="cart-item mb-3 d-flex justify-content-between align-items-center">
+
+        <!-- LEFT INFO -->
+        <div>
+          <h5 class="mb-1">{{ turf.turf_name }}</h5>
+          <p class="mb-1 text-muted">City: {{ turf.city }}</p>
+
+          {% if turf.is_approved %}
+            <span class="badge badge-success">Approved</span>
+          {% else %}
+            <span class="badge badge-warning">Pending Approval</span>
+          {% endif %}
+
+          {% if turf.is_booking_open %}
+            <span class="badge badge-primary ml-2">Booking Open</span>
+          {% else %}
+            <span class="badge badge-danger ml-2">Booking Closed</span>
+          {% endif %}
+        </div>
+
+        <!-- RIGHT ACTION -->
+        {% if turf.is_approved %}
+        <div class="text-right">
+
+          <form method="post"
+                action="{% url 'toggle-turf-booking' turf.uuid %}">
+            {% csrf_token %}
+
+            <button type="submit"
+                    class="btn btn-sm
+                    {% if turf.is_booking_open %}
+                      btn-danger
+                    {% else %}
+                      btn-success
+                    {% endif %}">
+              
+              {% if turf.is_booking_open %}
+                Disable Booking
+              {% else %}
+                Enable Booking
+              {% endif %}
+            </button>
+
+          </form>
+
+        </div>
+        {% endif %}
+
+      </div>
+
+    {% empty %}
+      <p>No turfs registered.</p>
+    {% endfor %}
+
+  </div>
+</div>
+
+{% endblock %}

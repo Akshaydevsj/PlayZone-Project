@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+
+        <!-- ACCOUNT DETAILS -->
+        <div class="cart-item mb-4">
+
+          <h3 class="heading mb-4 text-center">My Account</h3>
+
+          <div class="row">
+
+            <!-- USER INFO -->
+            <div class="col-md-6">
+
+              <div class="mb-3">
+                <strong>Name:</strong><br>
+                {{ request.user.first_name }} {{ request.user.last_name }}
+              </div>
+
+              <div class="mb-3">
+                <strong>Email:</strong><br>
+                {{ request.user.email }}
+              </div>
+
+              <div class="mb-3">
+                <strong>Phone:</strong><br>
+                {{ profile.phone }}
+              </div>
+
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="col-md-6 d-flex flex-column justify-content-center">
+
+              <a href="{% url 'edit-profile' %}"
+                 class="btn btn-outline-primary mb-3">
+                Edit Profile
+              </a>
+
+              <a href="{% url 'change-password' %}"
+                 class="btn btn-outline-danger">
+                Change Password
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ADDRESS SECTION -->
+        <div class="cart-item mb-4">
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">My Addresses</h4>
+
+            <a href="{% url 'add-address' %}"
+               class="btn btn-sm btn-outline-primary">
+              + Add Address
+            </a>
+          </div>
+
+          {% if addresses %}
+            {% for address in addresses %}
+            <div class="border p-3 mb-3">
+
+              <p class="mb-1">
+                <strong>{{ address.full_name }}</strong>
+              </p>
+
+              <p class="mb-1">
+                {{ address.house }},
+                {{ address.street }},
+                {{ address.city }},
+                {{ address.state }} - {{ address.pincode }}
+              </p>
+
+              <p class="mb-2">
+                Phone: {{ address.phone }}
+              </p>
+
+              <a href="{% url 'edit-address' address.id %}"
+                 class="btn btn-sm btn-outline-secondary">
+                Edit Address
+              </a>
+
+            </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted mb-0">
+              No address saved yet.
+            </p>
+          {% endif %}
+
+        </div>
+
+        <!-- ORDERS SECTION -->
+        <div class="cart-item">
+
+          <h4 class="mb-3">My Orders</h4>
+
+          <p class="text-muted">
+            You haven’t placed any orders yet.
+          </p>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

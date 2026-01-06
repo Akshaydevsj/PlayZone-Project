@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+{% block section %}
+
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <h3 class="heading mb-4 text-center">Book a Turf</h3>
+
+    <!-- SEARCH -->
+    <form method="get" class="mb-4 text-center">
+      <input type="text"
+             name="city"
+             value="{{ city }}"
+             placeholder="Search by city"
+             class="form-control d-inline-block"
+             style="width:300px;">
+      <button class="btn btn-danger mt-2">Search</button>
+    </form>
+
+    <div class="row">
+
+      {% for turf in turfs %}
+      <div class="col-md-4 mb-4">
+
+        <div class="cart-item h-100">
+
+          <img src="{{ turf.turf_image.url }}"
+               class="img-fluid mb-3"
+               style="height:200px;object-fit:cover;">
+
+          <h5>{{ turf.turf_name }}</h5>
+          <p class="text-muted">{{ turf.city }}</p>
+
+          <p>
+            <strong>Games:</strong> {{ turf.games }}
+          </p>
+
+          <p>
+            <strong>Price:</strong> ₹{{ turf.price_per_hour }}/hour
+          </p>
+
+          {% if turf.is_booking_open %}
+            <span class="badge badge-success mb-2">
+              Booking Open
+            </span>
+          {% else %}
+            <span class="badge badge-danger mb-2">
+              Booking Closed
+            </span>
+          {% endif %}
+
+          <a href="{% url 'turf-detail' turf.uuid %}"
+             class="btn btn-outline-primary btn-sm d-block mt-2">
+            View Details
+          </a>
+
+        </div>
+
+      </div>
+      {% empty %}
+        <div class="col-12 text-center">
+          <p>No turfs found.</p>
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

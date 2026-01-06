@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <h3 class="mb-4">Edit Turf Details</h3>
+
+    {% for message in messages %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="row">
+
+        <!-- LEFT COLUMN -->
+        <div class="col-md-6">
+
+          <div class="form-group">
+            <label>Turf Name</label>
+            <input type="text" name="turf_name" class="form-control"
+                   value="{{ turf.turf_name }}" required>
+          </div>
+
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" class="form-control"
+                   value="{{ turf.city }}" required>
+          </div>
+
+          <div class="form-group">
+            <label>Address</label>
+            <textarea name="address" class="form-control" rows="3" required>{{ turf.address }}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Landmark</label>
+            <input type="text" name="landmark" class="form-control"
+                   value="{{ turf.landmark }}" required>
+          </div>
+
+          <div class="form-group">
+            <label>Google Map Link</label>
+            <input type="url" name="google_map_link" class="form-control"
+                   value="{{ turf.google_map_link }}" required>
+          </div>
+
+          <div class="form-group">
+            <label>Games (comma separated)</label>
+            <input type="text" name="games" class="form-control"
+                   value="{{ turf.games }}" required>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="col-md-6">
+
+          <div class="form-group">
+            <label>Ground Type</label>
+            <select name="ground_type" class="form-control" required>
+              {% for key, value in turf._meta.get_field('ground_type').choices %}
+                <option value="{{ key }}" {% if turf.ground_type == key %}selected{% endif %}>
+                  {{ value }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Price per Hour (₹)</label>
+            <input type="number" name="price_per_hour" class="form-control"
+                   value="{{ turf.price_per_hour }}" required>
+          </div>
+
+          <div class="form-group">
+            <label>Change Turf Image</label>
+            <input type="file" name="turf_image" class="form-control">
+          </div>
+
+          {% if turf.turf_image %}
+            <img src="{{ turf.turf_image.url }}"
+                 class="img-fluid mt-2"
+                 style="height:150px; object-fit:cover;">
+          {% endif %}
+
+        </div>
+
+      </div>
+
+
+      <!-- ACTIONS -->
+      <div class="mt-4">
+        <button type="submit" class="btn btn-success">
+          Update Turf
+        </button>
+
+        <a href="{% url 'owner-dashboard' %}" class="btn btn-secondary ml-2">
+          Cancel
+        </a>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+{% endblock %}

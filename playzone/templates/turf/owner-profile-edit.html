@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+
+        <div class="cart-item">
+
+          <h3 class="heading mb-4 text-center">Edit Profile</h3>
+
+          {% for message in messages %}
+            <div class="alert alert-success text-center">
+              {{ message }}
+            </div>
+          {% endfor %}
+
+          <form method="post">
+            {% csrf_token %}
+
+            <!-- BASIC DETAILS -->
+            <h5 class="mb-3">Basic Information</h5>
+
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text"
+                     name="username"
+                     class="form-control"
+                     value="{{ request.user.username }}"
+                     required>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label>Email</label>
+                <input type="email"
+                       name="email"
+                       class="form-control"
+                       value="{{ owner.email }}"
+                       required>
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label>Phone</label>
+                <input type="text"
+                       name="phone"
+                       class="form-control"
+                       value="{{ owner.phone }}"
+                       required>
+              </div>
+            </div>
+
+            <hr>
+
+            <!-- BANK DETAILS -->
+            <h5 class="mb-3">Bank Details</h5>
+
+            <div class="form-group">
+              <label>Account Holder Name</label>
+              <input type="text"
+                     name="account_holder_name"
+                     class="form-control"
+                     value="{{ owner.account_holder_name }}"
+                     required>
+            </div>
+
+            <div class="form-group">
+              <label>Account Number</label>
+              <input type="text"
+                     name="account_number"
+                     class="form-control"
+                     value="{{ owner.account_number }}"
+                     required>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label>IFSC Code</label>
+                <input type="text"
+                       name="ifsc_code"
+                       class="form-control"
+                       value="{{ owner.ifsc_code }}"
+                       required>
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label>PAN Number</label>
+                <input type="text"
+                       name="pan_number"
+                       class="form-control"
+                       value="{{ owner.pan_number }}"
+                       required>
+              </div>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="d-flex justify-content-between mt-4">
+              <a href="{% url 'owner-dashboard' %}" class="btn btn-outline-secondary">
+                Cancel
+              </a>
+
+              <button type="submit" class="btn btn-danger">
+                Update Profile
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

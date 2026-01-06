@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+
+        <div class="cart-item">
+
+          <h3 class="heading mb-4 text-center">Register New Turf</h3>
+
+          {% for message in messages %}
+            <div class="alert alert-warning">{{ message }}</div>
+          {% endfor %}
+
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- TURF DETAILS -->
+            <div class="form-group">
+              <label>Turf Name</label>
+              <input type="text" name="turf_name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label>Turf Image</label>
+              <input type="file" name="turf_image" class="form-control" required>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label>City</label>
+                <input type="text" name="city" class="form-control" required>
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label>Landmark</label>
+                <input type="text" name="landmark" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Full Address</label>
+              <textarea name="address" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Google Map Link</label>
+              <input type="url" name="google_map_link" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label>Games Available</label>
+              <input type="text"
+                     name="games"
+                     class="form-control"
+                     placeholder="Football, Cricket, Badminton"
+                     required>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label>Ground Type</label>
+                <select name="ground_type" class="form-control" required>
+                  <option value="">Select</option>
+                  <option value="Mud">Mud</option>
+                  <option value="Grass">Grass</option>
+                  <option value="Artificial Grass">Artificial Grass</option>
+                  <option value="Wooden Floor">Wooden Floor</option>
+                  <option value="Synthetic Floor">Synthetic Floor</option>
+                </select>
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label>Price per Hour (₹)</label>
+                <input type="number" name="price_per_hour" class="form-control" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-danger btn-block mt-4">
+              Submit for Approval
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

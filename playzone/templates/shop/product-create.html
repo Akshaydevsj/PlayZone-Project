@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+
+        <div class="row mb-4 text-center">
+          <div class="col-12">
+            <span class="subheading">Play Zone</span>
+            <h2 class="heading mb-2">Add New Product</h2>
+            <p class="text-muted">
+              Enter complete product details for the shopping section.
+            </p>
+          </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+
+          {% csrf_token %}
+
+          <div class="row">
+
+            <div class="col-md-6 mb-3">
+              {{ form.name.label_tag }}
+              {{ form.name }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+              {{ form.photo.label_tag }}
+              {{ form.photo }}
+            </div>
+
+            <div class="col-md-12 mb-3">
+              {{ form.description.label_tag }}
+              {{ form.description }}
+            </div>
+
+            <div class="col-md-4 mb-3">
+              {{ form.price.label_tag }}
+              {{ form.price }}
+            </div>
+
+            <div class="col-md-4 mb-3">
+              {{ form.rating.label_tag }}
+              {{ form.rating }}
+            </div>
+
+            <div class="col-md-4 mb-3">
+              {{ form.quantity.label_tag }}
+              {{ form.quantity }}
+            </div>
+
+            <div class="col-md-4 mb-3">
+              {{ form.category.label_tag }}
+              {{ form.category }}
+            </div>
+
+            <div class="col-md-4 mb-3">
+              {{ form.brand.label_tag }}
+              {{ form.brand }}
+            </div>
+
+            <div class="col-md-4 mb-3">
+              {{ form.weight.label_tag }}
+              {{ form.weight }}
+            </div>
+
+            <div class="col-md-4 mb-3">
+              {{ form.colour.label_tag }}
+              {{ form.colour }}
+            </div>
+
+            <div class="col-md-4 mb-3">
+              {{ form.sport.label_tag }}
+              {{ form.sport }}
+            </div>
+
+            <div class="col-md-4 mb-4">
+              {{ form.material.label_tag }}
+              {{ form.material }}
+            </div>
+
+          </div>
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary px-5">
+              Save Product
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <style>
+    .site-navbar {
+      background: transparent;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body.shopping-page .site-navbar {
+      background: rgba(0,0,0,0.85);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    body.shopping-page .site-navbar .nav-link,
+    body.shopping-page .site-navbar .site-logo a {
+      color: #fff !important;
+    }
+
+    .site-navbar .nav-link:hover {
+      color: #e50914 !important;
+    }
+  </style>
+
+  <title>PlayZone</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/assets/css/style.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+<div class="site-wrap">
+
+<header class="site-navbar py-4 js-sticky-header site-navbar-target">
+
+  <div class="container-fluid">
+    <div class="d-flex align-items-center">
+
+      <!-- LOGO -->
+      <div class="site-logo">
+        <a href="{% url 'home' %}">Playzone<span>.</span></a>
+      </div>
+
+      <!-- NAV -->
+      <div class="ml-auto">
+        <nav class="site-navigation text-right">
+          <ul class="site-menu main-menu d-none d-lg-block">
+
+            <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+
+            {% if user.is_authenticated and user.turf_owner %}
+              <li>
+                <a href="{% url 'owner-dashboard' %}" class="nav-link">
+                  Turf Dashboard
+                </a>
+              </li>
+
+            {% elif user.is_authenticated and user.is_superuser %}
+              <li>
+                <a href="{% url 'turf-approvals' %}" class="nav-link">
+                  Turf Approvals
+                </a>
+              </li>
+
+            {% else %}
+              <li>
+                <a href="{% url 'owner-signup' %}" class="nav-link">
+                  Turf Register
+                </a>
+              </li>
+            {% endif %}
+
+            <li><a href="{% url 'turf-list' %}" class="nav-link">Turf Booking</a></li>
+
+            {% if user.is_authenticated and user.is_superuser %}
+              <li>
+                <a href="{% url 'turf-approvals' %}" class="nav-link">
+                  Turf Approvals
+                </a>
+              </li>
+            {% endif %}
+
+            <li><a href="{% url 'product-list' %}" class="nav-link">Shopping</a></li>
+            <li><a href="#" class="nav-link">Feedback</a></li>
+            <li><a href="#" class="nav-link">Contact</a></li>
+
+            <!-- ================= AUTH LINKS ================= -->
+
+            {% if user.is_authenticated and user.is_superuser %}
+
+              <!-- SUPERUSER -->
+              <li>
+                <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+              </li>
+
+            {% elif user.is_authenticated and user.turf_owner %}
+
+              <!-- TURF OWNER -->
+              <li>
+                <a href="{% url 'owner-logout' %}" class="nav-link">Logout</a>
+              </li>
+
+            {% elif user.is_authenticated %}
+
+              <!-- NORMAL USER -->
+              <li>
+                <a href="{% url 'account' %}" class="nav-link">My Account</a>
+              </li>
+              <li>
+                <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+              </li>
+
+            {% else %}
+
+              <!-- NOT LOGGED IN -->
+              <li>
+                <a href="{% url 'login' %}" class="nav-link">Login</a>
+              </li>
+              <li>
+                <a href="{% url 'signup' %}" class="nav-link">Signup</a>
+              </li>
+
+            {% endif %}
+
+          </ul>
+        </nav>
+      </div>
+
+    </div>
+  </div>
+
+</header>
+
+{% block section %}
+{% endblock %}
+
+<footer class="footer-section">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-4">
+        <h3 class="text-dark">About Play Zone</h3>
+        <p>
+          Play Zone is an all-in-one sports platform for turf booking
+          and sports shopping.
+        </p>
+      </div>
+
+      <div class="col-md-3 ml-auto">
+        <h3 class="text-dark">Links</h3>
+        <ul class="list-unstyled">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'product-list' %}">Shopping</a></li>
+          <li><a href="#">Turf Booking</a></li>
+          <li><a href="#">Feedback</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <h3 class="text-dark">Stay Connected</h3>
+        <p>
+          Get updates on turf availability and sports offers.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <h3 class="mb-4">Turf Approvals</h3>
+
+    {% for message in messages %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    <!-- ================= PENDING TURFS ================= -->
+    <h5 class="mb-3">Pending Requests</h5>
+
+    {% for turf in pending_turfs %}
+      <div class="cart-item mb-4">
+        <h5>{{ turf.turf_name }}</h5>
+
+        <p><strong>City:</strong> {{ turf.city }}</p>
+        <p><strong>Address:</strong> {{ turf.address }}</p>
+        <p><strong>Landmark:</strong> {{ turf.landmark }}</p>
+        <p><strong>Games:</strong> {{ turf.games }}</p>
+        <p><strong>Ground:</strong> {{ turf.ground_type }}</p>
+        <p><strong>Price / Hour:</strong> ₹{{ turf.price_per_hour }}</p>
+        <p><strong>Light Extra:</strong> ₹{{ turf.light_extra_charge }}</p>
+
+        <p>
+          <a href="{{ turf.google_map_link }}" target="_blank">
+            View on Google Maps
+          </a>
+        </p>
+
+        <a href="{% url 'approve-turf' turf.uuid %}"
+           class="btn btn-success btn-sm mr-2">
+          Approve
+        </a>
+
+       <form method="post"
+          action="{% url 'deny-turf' turf.uuid %}"
+          style="display:inline;">
+      {% csrf_token %}
+
+      <input type="hidden" name="reason"
+            value="Your turf does not meet our quality guidelines">
+
+      <button type="submit"
+              class="btn btn-danger btn-sm"
+              onclick="return confirm('Are you sure you want to deny this turf?')">
+        Deny
+      </button>
+      </form>
+
+      </div>
+    {% empty %}
+      <p>No pending turf requests.</p>
+    {% endfor %}
+
+    <hr>
+
+    <!-- ================= APPROVED TURFS ================= -->
+    <h5 class="mb-3">Approved Turfs</h5>
+
+    {% for turf in approved_turfs %}
+      <div class="cart-item mb-3">
+        <h5>{{ turf.turf_name }}</h5>
+        <p>{{ turf.city }}</p>
+
+       <form method="post"
+      action="{% url 'delete-turf' turf.uuid %}"
+      style="display:inline;"
+      onsubmit="return confirm('Are you sure you want to delete this turf?');">
+
+      {% csrf_token %}
+
+      <input type="hidden" name="reason"
+            value="Deleted by admin">
+
+      <button type="submit"
+              class="btn btn-danger btn-sm">
+        Delete
+      </button>
+
+    </form>
+
+      </div>
+    {% empty %}
+      <p>No approved turfs.</p>
+    {% endfor %}
+
+  </div>
+</div>
+{% endblock %}

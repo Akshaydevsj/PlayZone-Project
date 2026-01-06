@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+
+<style>
+.cart-item {
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  padding: 20px;
+  transition: all .25s ease;
+}
+.cart-item:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.qty-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 18px;
+  text-align: center;
+  line-height: 32px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #000;
+}
+
+.qty-btn:hover {
+  background: #f8f9fa;
+}
+
+.qty-input {
+  width: 50px;
+  height: 34px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.cart-summary {
+  border: 1px solid #e5e5e5;
+  background: #fafafa;
+  padding: 20px;
+}
+
+.sticky-summary {
+  position: sticky;
+  top: 140px;
+}
+</style>
+
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <!-- TITLE -->
+    <div class="row mb-4">
+      <div class="col">
+        <h2 class="heading mb-0">My Cart</h2>
+      </div>
+    </div>
+
+    <!-- MESSAGES -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-warning">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if cart %}
+    <div class="row">
+
+      <!-- CART ITEMS -->
+      <div class="col-md-8">
+
+        {% for uuid, item in cart.items %}
+        <div class="cart-item mb-4">
+
+          <div class="row align-items-center">
+
+            <!-- IMAGE -->
+            <div class="col-md-3">
+              {% if item.photo %}
+                <img src="{{ item.photo }}" class="img-fluid">
+              {% endif %}
+            </div>
+
+            <!-- INFO -->
+            <div class="col-md-4">
+              <h5>{{ item.name }}</h5>
+              <p class="mb-1 text-muted">₹ {{ item.price }}</p>
+
+              <a href="{% url 'product-detail' uuid %}"
+                 class="text-primary small">
+                ← Back to product
+              </a>
+            </div>
+
+            <!-- QUANTITY -->
+            <div class="col-md-3 text-center">
+              <div class="d-flex justify-content-center align-items-center">
+
+                <!-- MINUS -->
+                <a href="{% url 'update-cart' uuid 'minus' %}"
+                   class="qty-btn">−</a>
+
+                <input class="qty-input mx-2"
+                       value="{{ item.quantity }}"
+                       readonly>
+
+                <!-- PLUS -->
+                <a href="{% url 'update-cart' uuid 'plus' %}"
+                   class="qty-btn">+</a>
+
+              </div>
+            </div>
+
+            <!-- REMOVE -->
+            <div class="col-md-2 text-right">
+              <a href="{% url 'remove-cart' uuid %}"
+                 class="btn btn-outline-danger btn-sm">
+                Remove
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+        {% endfor %}
+
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="col-md-4">
+        <div class="cart-summary sticky-summary">
+
+          <h4 class="mb-3">Price Details</h4>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span>Total Items</span>
+            <span>{{ cart|length }}</span>
+          </div>
+
+          <div class="d-flex justify-content-between mb-3">
+            <strong>Total Amount</strong>
+            <strong>₹ {{ total }}</strong>
+          </div>
+
+          <hr>
+
+          <!-- BUY ALL -->
+          <a href="#"
+             class="btn btn-danger btn-block mb-3">
+            <i class="fa fa-bolt mr-1"></i>
+            Buy All Items
+          </a>
+
+          <!-- CONTINUE -->
+          <a href="{% url 'product-list' %}"
+             class="btn btn-outline-secondary btn-block">
+            Continue Shopping
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+
+    {% else %}
+      <div class="text-center py-5">
+        <h4>Your cart is empty</h4>
+        <a href="{% url 'product-list' %}"
+           class="btn btn-primary mt-3">
+          Start Shopping
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

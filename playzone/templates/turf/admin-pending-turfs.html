@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <h3 class="mb-4">Pending Turf Requests</h3>
+
+    {% for message in messages %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {% for turf in turfs %}
+      <div class="cart-item mb-3">
+        <h5>{{ turf.turf_name }}</h5>
+        <p>{{ turf.city }}</p>
+
+        <a href="{% url 'admin-approve-turf' turf.uuid %}"
+           class="btn btn-success btn-sm">
+          Approve
+        </a>
+      </div>
+    {% empty %}
+      <p>No pending turf requests.</p>
+    {% endfor %}
+
+  </div>
+</div>
+{% endblock %}

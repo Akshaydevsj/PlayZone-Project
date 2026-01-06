@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+{% block section %}
+
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    {% for message in messages %}
+      <div class="alert alert-warning">{{ message }}</div>
+    {% endfor %}
+
+    <div class="row">
+
+      <!-- LEFT : TURF DETAILS -->
+      <div class="col-md-6">
+        <img src="{{ turf.turf_image.url }}"
+             class="img-fluid mb-4"
+             style="border-radius:8px;">
+        <h3>{{ turf.turf_name }}</h3>
+        <p><strong>Location :</strong> {{ turf.address }}</p>
+        <p><strong>City :</strong> {{ turf.city }}</p>
+        <p><strong>Games :</strong> {{ turf.games }}</p>
+        <p><strong>₹ {{ turf.price_per_hour }}/hour</strong></p>
+
+        <div class="alert alert-info">
+          Lighting charges apply from 6 PM to 6 AM (₹{{ turf.light_extra_charge }}/hour)
+        </div>
+      </div>
+
+      <!-- RIGHT : BOOKING -->
+      <div class="col-md-6">
+        <div class="cart-item">
+
+          <h5 class="mb-3">Book Turf</h5>
+
+          {% if not user.is_authenticated %}
+            <div class="alert alert-warning">
+              Please login to book this turf.
+            </div>
+          {% endif %}
+
+          <form method="post" action="{% url 'create-turf-booking' turf.uuid %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+              <label>Date</label>
+              <input type="date" name="booking_date" id="booking_date"
+                     class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label>Start Time</label>
+              <input type="time" name="start_time" id="start_time"
+                     class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label>End Time</label>
+              <input type="time" name="end_time" id="end_time"
+                     class="form-control" required>
+            </div>
+
+            <div class="alert alert-secondary">
+              Total Amount: ₹ <span id="total_amount">0</span>
+            </div>
+
+            <!-- ================= POLICY SECTION ================= -->
+            <div class="card p-3 mb-3">
+            <h6 class="mb-2">Booking Policy</h6>
+            <ul class="text-muted" style="font-size:14px;">
+                <li>Once booking is confirmed, cancellation is not allowed.</li>
+                <li>Date and time cannot be changed after booking.</li>
+                <li>Any damage caused to the turf must be compensated by the user.</li>
+                <li>Lighting charges apply during night hours.</li>
+            </ul>
+
+            {% if user.is_authenticated %}
+            <div class="form-check">
+                <input class="form-check-input"
+                    type="checkbox"
+                    id="policyCheck"
+                    required
+                    onchange="toggleBookingButton()">
+                <label class="form-check-label" for="policyCheck" style="font-size:14px;">
+                I have read and agree to the booking policy
+                </label>
+            </div>
+            {% endif %}
+            </div>
+
+            <!-- ================= ACTION BUTTONS ================= -->
+            <div class="d-flex justify-content-between align-items-center">
+
+            <a href="{% url 'turf-list' %}"
+                class="btn btn-outline-secondary">
+                ← Back to Turf List
+            </a>
+
+            <button type="submit"
+                    id="bookBtn"
+                    class="btn btn-danger"
+                    disabled>
+                Book Turf
+            </button>
+
+            </div>
+
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================= EXISTING PRICE SCRIPT (UNCHANGED) ================= -->
+<script>
+  const baseRate = Number("{{ turf.price_per_hour }}");
+  const lightCharge = Number("{{ turf.light_extra_charge }}");
+
+  const today = new Date();
+  const maxDate = new Date();
+  maxDate.setDate(today.getDate() + 5);
+
+  document.getElementById("booking_date").min =
+    today.toISOString().split("T")[0];
+  document.getElementById("booking_date").max =
+    maxDate.toISOString().split("T")[0];
+
+  function calculateAmount() {
+
+    const start = document.getElementById("start_time").value;
+    const end = document.getElementById("end_time").value;
+
+    if (!start || !end) return;
+
+    const startHour = parseInt(start.split(":")[0]);
+    const endHour = parseInt(end.split(":")[0]);
+
+    let hours = endHour - startHour;
+
+    if (hours < 1 || hours > 12) {
+      document.getElementById("total_amount").innerText = "0";
+      return;
+    }
+
+    let base = hours * baseRate;
+    let light = 0;
+
+    for (let h = startHour; h < endHour; h++) {
+      if (h >= 18 || h < 6) {
+        light += lightCharge;
+      }
+    }
+
+    document.getElementById("total_amount").innerText = base + light;
+  }
+
+  document.getElementById("start_time")
+    .addEventListener("change", calculateAmount);
+
+  document.getElementById("end_time")
+    .addEventListener("change", calculateAmount);
+
+ function toggleBookingButton() {
+  const check = document.getElementById("policyCheck");
+  const btn = document.getElementById("bookBtn");
+
+  if (!check || !btn) return;
+
+  btn.disabled = !check.checked;
+}
+</script>
+
+
+
+
+{% endblock %}

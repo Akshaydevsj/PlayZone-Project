@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+
+<style>
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 42px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #666;
+}
+
+.password-toggle:hover {
+  color: #000;
+}
+</style>
+
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+
+        <div class="cart-item">
+
+          <h3 class="heading mb-4 text-center">Turf Owner Login</h3>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-warning">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+              <label>Turf Username</label>
+              {{ form.username }}
+            </div>
+
+            <div class="form-group">
+              <label>Password</label>
+              <div class="password-wrapper">
+                {{ form.password }}
+                <span class="password-toggle"
+                      onclick="togglePassword('{{ form.password.id_for_label }}', this)">
+                  <i class="fa fa-eye-slash"></i>
+                </span>
+              </div>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-danger btn-block mt-3">
+              Login
+            </button>
+
+            <hr>
+
+            <div class="text-center">
+              <p class="mb-0">
+                New turf owner?
+                <a href="{% url 'owner-signup' %}" class="text-primary">
+                  Register here
+                </a>
+              </p>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePassword(inputId, el) {
+  const input = document.getElementById(inputId);
+  const icon  = el.querySelector("i");
+
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.replace("fa-eye-slash", "fa-eye");
+  } else {
+    input.type = "password";
+    icon.classList.replace("fa-eye", "fa-eye-slash");
+  }
+}
+</script>
+
+{% endblock %}

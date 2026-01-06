@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+{% block section %}
+
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <h3 class="heading mb-4">Available Turfs</h3>
+
+    <div class="row">
+      {% for turf in turfs %}
+      <div class="col-md-4 mb-4">
+
+        <div class="cart-item h-100">
+
+          <img src="{{ turf.turf_image.url }}"
+               class="img-fluid mb-3"
+               style="height:200px; object-fit:cover; width:100%;">
+
+          <h5>{{ turf.turf_name }}</h5>
+          <p class="mb-1"><strong>Location :</strong> {{ turf.address }}</p>
+          <p class="mb-1"><strong>Games :</strong> {{ turf.games }}</p>
+          <p class="mb-3"><strong>₹ {{ turf.price_per_hour }}/hour</strong></p>
+
+          <a href="{% url 'turf-detail' turf.uuid %}"
+             class="btn btn-danger btn-block">
+            View Details
+          </a>
+
+        </div>
+
+      </div>
+      {% empty %}
+        <p>No turfs available.</p>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

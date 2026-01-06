@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="text-center mb-4">
+      <h3 class="heading mb-3">Welcome, {{ owner.owner_name }}</h3>
+
+      {% if not turfs or turfs.0.is_denied %}
+        <a href="{% url 'turf-register' %}" class="btn btn-danger btn-lg">
+          + Register Your Turf
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- DJANGO MESSAGES -->
+    {% for message in messages %}
+      <div class="alert alert-info text-center">{{ message }}</div>
+    {% endfor %}
+
+    <!-- TURF LIST -->
+    {% if turfs %}
+      <div class="row justify-content-center">
+
+        {% for turf in turfs %}
+        <div class="col-md-8 mb-4">
+
+          <div class="cart-item">
+
+            {% if turf.turf_image %}
+              <img src="{{ turf.turf_image.url }}"
+                   class="img-fluid mb-3"
+                   style="height:220px; object-fit:cover; width:100%; border-radius:6px;">
+            {% endif %}
+
+            <h4 class="mb-2">{{ turf.turf_name }}</h4>
+
+            <p><strong>City:</strong> {{ turf.city }}</p>
+            <p><strong>Price / Hour:</strong> ₹{{ turf.price_per_hour }}</p>
+
+            <!-- BOOKING STATUS -->
+            <p>
+              <strong>Booking:</strong>
+              {% if turf.is_booking_open %}
+                <span class="badge badge-success">Open</span>
+              {% else %}
+                <span class="badge badge-danger">Closed</span>
+              {% endif %}
+            </p>
+
+            <!-- STATUS -->
+            <p>
+              <strong>Status:</strong>
+
+              {% if turf.is_approved %}
+                <span class="badge badge-success">Approved</span>
+
+              {% elif turf.is_denied %}
+                <span class="badge badge-danger">Rejected</span>
+
+              {% else %}
+                <span class="badge badge-warning">Waiting for Approval</span>
+              {% endif %}
+            </p>
+
+            <!-- DENY MESSAGE (ONLY THIS FOR DENY) -->
+            {% if turf.is_denied %}
+              <div class="alert alert-danger mt-2">
+                <strong>Rejected by Admin</strong><br>
+                Reason: {{ turf.admin_delete_reason }}
+              </div>
+            {% endif %}
+
+            <!-- ACTIONS (ONLY APPROVED) -->
+            {% if turf.is_approved %}
+              <div class="d-flex justify-content-end mt-3">
+
+                <a href="{% url 'owner-edit-turf' turf.uuid %}"
+                   onclick="return confirmEdit()"
+                   class="btn btn-outline-primary btn-sm mr-2">
+                  Edit Turf
+                </a>
+
+                <a href="{% url 'owner-delete-turf' turf.uuid %}"
+                   onclick="return confirmDelete()"
+                   class="btn btn-outline-danger btn-sm">
+                  Delete Turf
+                </a>
+
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    {% endif %}
+
+    <!-- EXTRA OPTIONS -->
+    <div class="text-center mt-5">
+      <a href="{% url 'password_change' %}" class="btn btn-outline-secondary mr-2">
+        Change Password
+      </a>
+
+      <a href="{% url 'owner-profile-edit' %}" class="btn btn-outline-secondary">
+        Edit Profile
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function confirmDelete() {
+  return confirm("Are you sure you want to delete this turf? This action cannot be undone.");
+}
+
+function confirmEdit() {
+  return confirm("Do you want to edit this turf details?");
+}
+</script>
+
+{% endblock %}

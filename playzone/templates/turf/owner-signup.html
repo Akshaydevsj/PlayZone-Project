@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block body_class %}shopping-page{% endblock %}
+
+{% block section %}
+
+<style>
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 42px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #666;
+}
+
+.password-toggle:hover {
+  color: #000;
+}
+</style>
+
+<div class="site-section" style="padding-top:140px;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+
+        <div class="cart-item">
+
+          <h3 class="heading mb-4 text-center">Turf Owner Registration</h3>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-warning">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+              <label>Owner Name</label>
+              {{ form.owner_name }}
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label>Email</label>
+                {{ form.email }}
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label>Phone Number</label>
+                {{ form.phone }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Turf Username</label>
+              {{ form.username }}
+              <small class="text-muted">
+                Use YOUR NAME in CAPITAL letters without spaces
+              </small>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label>Password</label>
+                <div class="password-wrapper">
+                  {{ form.password }}
+                  <span class="password-toggle"
+                        onclick="togglePassword('{{ form.password.id_for_label }}', this)">
+                    <i class="fa fa-eye-slash"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label>Confirm Password</label>
+                <div class="password-wrapper">
+                  {{ form.confirm_password }}
+                  <span class="password-toggle"
+                        onclick="togglePassword('{{ form.confirm_password.id_for_label }}', this)">
+                    <i class="fa fa-eye-slash"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+
+            <h5 class="mb-3">Bank Details</h5>
+
+            <div class="form-group">
+              <label>Account Holder Name</label>
+              <input type="text" name="account_holder_name"
+                    class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label>Account Number</label>
+              <input type="text" name="account_number"
+                    class="form-control" required>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label>IFSC Code</label>
+                <input type="text" name="ifsc_code"
+                      class="form-control" required>
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label>PAN Number</label>
+                <input type="text" name="pan_number"
+                      class="form-control" required>
+              </div>
+            </div>
+
+
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger mt-2">
+                {{ form.non_field_errors.0 }}
+              </div>
+            {% endif %}
+
+            <button type="submit"
+                    class="btn btn-danger btn-block mt-3">
+              Create Turf Owner Account
+            </button>
+
+            <hr>
+
+            <div class="text-center">
+              <p class="mb-0">
+                Already registered?
+                <a href="{% url 'owner-login' %}" class="text-primary">
+                  Login here
+                </a>
+              </p>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePassword(inputId, el) {
+  const input = document.getElementById(inputId);
+  const icon  = el.querySelector("i");
+
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.replace("fa-eye-slash", "fa-eye");
+  } else {
+    input.type = "password";
+    icon.classList.replace("fa-eye", "fa-eye-slash");
+  }
+}
+</script>
+
+{% endblock %}
